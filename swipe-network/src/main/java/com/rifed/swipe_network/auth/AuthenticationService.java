@@ -1,15 +1,16 @@
 package com.rifed.swipe_network.auth;
-
-
+import com.rifed.swipe_network.email.EmailService;
+import com.rifed.swipe_network.email.EmailTemplateName;
 import com.rifed.swipe_network.role.RoleRepository;
 import com.rifed.swipe_network.user.Token;
 import com.rifed.swipe_network.user.TokenRepository;
 import com.rifed.swipe_network.user.User;
 import com.rifed.swipe_network.user.UserRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,9 +23,12 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final EmailService emailService;
 
+    @Value("${application.mailing.frontend.activation-url}")
+    private String activationUrl;
 
-    public void register(RegistrationRequest request) {
+    public void register(RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
                 .orElseThrow(()-> new IllegalStateException("User not found"));
 
@@ -39,15 +43,22 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
         sendValidationEmail(user) ;
-        
-
 
     }
 
-    private void sendValidationEmail(User user) {
+    private void sendValidationEmail(User user) throws MessagingException {
 
         var newToken = generateAndSaveActivationToken(user);
-        // send email 
+        // send email
+
+        emailService.sendEmail(
+                user.getEmail(),
+                user.fullName(),
+                EmailTemplateName.ACTIVATE_ACCOUNT,
+                activationUrl,
+                newToken,
+                "Account activation"
+        );
     }
 
     private String generateAndSaveActivationToken(User user) {
