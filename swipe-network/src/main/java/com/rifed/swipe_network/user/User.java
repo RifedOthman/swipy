@@ -3,6 +3,7 @@ package com.rifed.swipe_network.user;
 import com.rifed.swipe_network.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,12 +19,13 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="_user")
 @EntityListeners(AuditingEntityListener.class)
+
 public class User implements UserDetails, Principal {
 
     @Id
@@ -45,6 +47,7 @@ public class User implements UserDetails, Principal {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate ;
+
     @CreatedDate
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate ;

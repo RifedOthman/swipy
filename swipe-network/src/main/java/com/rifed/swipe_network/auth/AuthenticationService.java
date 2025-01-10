@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final RoleRepository roleRepository;
-
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -30,7 +29,7 @@ public class AuthenticationService {
 
     public void register(RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
-                .orElseThrow(()-> new IllegalStateException("User not found"));
+                .orElseThrow(()-> new IllegalStateException("ROLE USER WAS NOT INITIALIZED"));
 
         var user = User.builder()
                 .firstName(request.getFirstName())
@@ -43,7 +42,6 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
         sendValidationEmail(user) ;
-
     }
 
     private void sendValidationEmail(User user) throws MessagingException {
@@ -75,7 +73,6 @@ public class AuthenticationService {
     }
 
     private String generateActivationCode(int length) {
-
         String characters = "0123456789";
         StringBuilder codeBuilder = new StringBuilder();
         SecureRandom secureRandom = new SecureRandom();
@@ -83,8 +80,6 @@ public class AuthenticationService {
             int randomIndex = secureRandom.nextInt(characters.length());
             codeBuilder.append(characters.charAt(randomIndex));
         }
-
         return codeBuilder.toString();
-
     }
 }

@@ -5,6 +5,7 @@ import com.rifed.swipe_network.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -20,7 +21,8 @@ public class Role {
 
     @Id
     @GeneratedValue
-    private String role;
+    private Integer id;
+
     @Column(unique = true)
     private String name ;
 
@@ -31,7 +33,7 @@ public class Role {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate ;
-    @CreatedDate
+    @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate ;
 
