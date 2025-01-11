@@ -53,11 +53,6 @@ public class User implements UserDetails, Principal {
     private LocalDateTime lastModifiedDate ;
 
     @Override
-    public String getName() {
-        return "";
-    }
-
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
       return this.roles
               .stream()
@@ -67,12 +62,12 @@ public class User implements UserDetails, Principal {
 
     @Override
     public String getPassword() {
-        return "";
+        return this.password; // Return the actual password
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return this.email; // Return the email as the username
     }
 
     @Override
@@ -97,4 +92,12 @@ public class User implements UserDetails, Principal {
 
     public String fullName(){return firstName + " " + lastName;}
 
+    @Override
+    public String getName() {
+        return email;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
